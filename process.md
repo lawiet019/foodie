@@ -76,3 +76,12 @@ user (username, password, theirRecipe,location,id*)
     ```
 
 5. build the schema of database
+ckeditor
+https://blog.csdn.net/qq_38504396/article/details/79835475
+
+6. add to github
+ git remote add origin git@github.com:lawiet019/foodie.git
+
+DJANGO ORM
+https://blog.csdn.net/kan2016/article/details/82855158
+https://blog.csdn.net/kan2016/article/details/82868636?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param
