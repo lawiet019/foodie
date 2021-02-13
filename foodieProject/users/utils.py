@@ -125,18 +125,12 @@ def send_register_email(email, send_type):
     # 发送之前先保存到数据库，到时候查询链接是否存在
     # 实例化一个EmailVerifyRecord对象
 
-    email_record = EmailVerifyRecord()
+
+    email_record = EmailVerifyRecord.objects.update_or_create(email = email,send_type = send_type)
     # 生成随机的code放入链接
-    code = get_chars(init_chars,16)
-    print("arrive there",len(code))
-    email_record.code = "".join(code)
-    print("arrive there 1",send_type)
-    email_record.email = email
-    print("arrive there 2")
-    email_record.sendType = send_type
-    print("arrive there 3")
+    code = "".join(get_chars(init_chars,16))
+    email_record.code = code
     email_record.sendTime  = datetime.now()
-    print("arrive there 4")
     email_record.save()
 
 
@@ -149,10 +143,9 @@ def send_register_email(email, send_type):
     if send_type == "register":
         email_title = "foodie - activate your account"
         email_body = "Please click the link below to activate your account: http://127.0.0.1:8000/v1/users/activation/{0}".format(code)
-        print("arrive there 5")
+
         # 使用Django内置函数完成邮件发送。四个参数：主题，邮件内容，发件人邮箱地址，收件人（是一个字符串列表）
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
-        print("arrive there 6")
         # 如果发送成功
         if send_status:
             return True

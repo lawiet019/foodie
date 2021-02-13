@@ -109,3 +109,11 @@ def active(request,slug = None):
 
 
     return JsonResponse({'result': 400, 'msg':'The slug is invalid'})
+
+@csrf_exempt
+def resendactive(request):
+    email = request.POST.get("email")
+    if send_register_email(email,"register"):
+        return JsonResponse({'result': 200, 'msg':'If you  have alreay registered, We already sent you the email'})
+    else:
+        return JsonResponse({'result': 400, 'msg':'Sorry, there is something problem with your request '})
