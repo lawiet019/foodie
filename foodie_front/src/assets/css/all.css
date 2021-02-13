@@ -1,0 +1,33 @@
+.container {
+  padding-top: 150px;
+}
+.width_all {
+  width: 100%;
+}
+.inner_center {
+  text-align: center;
+}
+.small_title {
+  font-family: "Times New Roman";
+  font-size: 20px;
+  font-weight: bold;
+}
+.button_text {
+  font-color: orange;
+}
+.form_div {
+  padding: 10px;
+}
+.login-form {
+  max-width: 100%;
+}
+.right_float {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+  background-color: #c30201!important;
+  border-color: transparent;
+}
+
