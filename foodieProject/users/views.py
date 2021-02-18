@@ -35,6 +35,28 @@ def register(request):
             send_register_email(email,"register")
             return JsonResponse({'result': 200, 'msg':'you have registered successfully'})
 @csrf_exempt
+def checkEmail(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user_with_email =UserProfile.objects.filter(email = email)
+        if user_with_email.exists():
+            return JsonResponse({'result': 400, 'msg':'the email has been used,please choose another one'})
+        else:
+            return JsonResponse({'result': 200, 'msg':'you can use the email'})
+@csrf_exempt
+def checkUsername(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        user_with_name =UserProfile.objects.filter(username = username)
+        if user_with_name.exists():
+            return JsonResponse({'result': 400, 'msg':'the username has been used,please choose another one'})
+        else:
+            return JsonResponse({'result': 200, 'msg':'you can use this username'})
+
+
+
+
+@csrf_exempt
 def loginByUsername(request):
     if request.method == 'POST':
 
@@ -87,11 +109,20 @@ def getCaptcha(request):
     return JsonResponse({'result': 200, 'captcha':image_string})
 @csrf_exempt
 def verifyCaptcha(request):
-    user_code = request.POST.get("code")
-    if code_to_lower(user_code) == code_to_lower(request.session['captcha']):
-        return JsonResponse({'result': 200, 'msg':'your captcha is correct'})
-    else:
-        return JsonResponse({'result': 400, 'msg':'your captcha is wrong'})
+    if request.method == 'POST':
+
+        user_code = request.POST.get("code")
+
+        if 'captcha' not in request.session:
+
+            return JsonResponse({'result': 400, 'msg':'there is something wrong with your captcha'})
+
+        if code_to_lower(user_code) == code_to_lower(request.session['captcha']):
+
+            return JsonResponse({'result': 200, 'msg':'your captcha is correct'})
+        else:
+
+            return JsonResponse({'result': 400, 'msg':'your captcha is wrong'})
 
 @csrf_exempt
 def active(request,slug = None):

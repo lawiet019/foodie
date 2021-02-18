@@ -7,14 +7,47 @@ import "../assets/css/all.css";
 
 import { Form, Input, Button, Row, Col, Avatar } from "antd";
 
-import { UserOutlined, LockOutlined, MailFilled } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  MailFilled,
+  ReloadOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
+import qs from "qs";
 
 class Register extends Component {
-  getCaptha  = () =>{
-      axios.get("")
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      captcha: "",
+    };
   }
+
+  componentWillMount() {
+    this.getCaptha();
+  }
+
+  getCaptha = () => {
+    axios.get("/v1/users/getcaptcha").then((response) => {
+      if (response.data.result == 200) {
+        let img_base64 = "data:image/png;base64," + response.data.captcha;
+        this.setState({ captcha: img_base64 });
+      }
+    });
+  };
+  // verifyCaptha = (code) => {
+  //   axios.get("/v1/users/verifyCaptcha").then((response) => {
+
+  //     if (response.data.result == 200) {
+  //       let img_base64 = "data:image/png;base64," + response.data.captcha;
+  //       this.setState({ captcha: img_base64 });
+  //     }
+  //   });
+
+  // };
+
   render() {
     return (
       <div className="container">
@@ -56,11 +89,42 @@ class Register extends Component {
                 }}
               >
                 <Form.Item
+                  validateTrigger={["onChange", "onBlur"]}
                   name="username"
                   rules={[
                     {
                       required: true,
                       message: "Please input your Username! ",
+                    },
+                    {
+                      validator: (_, value) => {
+                        return new Promise((resolve, reject) => {
+                          if (value) {
+                            axios
+                              .post(
+                                "v1/users/checkusername",
+                                qs.stringify({ username: value }),
+                                {
+                                  headers: {
+                                    "Content-Type":
+                                      "application/x-www-form-urlencoded;charset=utf-8",
+                                  },
+                                }
+                              )
+                              .then((response) => {
+                                if (response.data.result == 200) {
+                                  resolve();
+                                } else {
+                                  reject(response.data.msg);
+                                }
+                              });
+                          }
+                          else{
+                            reject()
+                          }
+                        });
+                      },
+                      validateTrigger: "onBlur"
                     },
                   ]}
                 >
@@ -72,6 +136,7 @@ class Register extends Component {
 
                 <Form.Item
                   name="email"
+                  validateTrigger={["onChange", "onBlur"]}
                   rules={[
                     {
                       type: "email",
@@ -80,6 +145,36 @@ class Register extends Component {
                     {
                       required: true,
                       message: "Please input your E-mail!",
+                    },
+                    {
+                      validator: (_, value) => {
+                        return new Promise((resolve, reject) => {
+                          if (value) {
+                            axios
+                              .post(
+                                "v1/users/checkemail",
+                                qs.stringify({ email: value }),
+                                {
+                                  headers: {
+                                    "Content-Type":
+                                      "application/x-www-form-urlencoded;charset=utf-8",
+                                  },
+                                }
+                              )
+                              .then((response) => {
+                                if (response.data.result == 200) {
+                                  resolve();
+                                } else {
+                                  reject(response.data.msg);
+                                }
+                              });
+                          }
+                          else{
+                            reject()
+                          }
+                        });
+                      },
+                      validateTrigger: "onBlur"
                     },
                   ]}
                 >
@@ -96,6 +191,7 @@ class Register extends Component {
                       required: true,
                       message: "Please input your Password!",
                     },
+                    
                   ]}
                 >
                   <Input
@@ -131,18 +227,46 @@ class Register extends Component {
                     placeholder="comfirm password"
                   />
                 </Form.Item>
-                <Form.Item
-                  extra="We must make sure that your are a human."
-                >
-                  <Row >
+                <Form.Item extra="We must make sure that your are a human.">
+                  <Row>
                     <Col span={12}>
                       <Form.Item
                         name="captcha"
+                        validateTrigger={["onChange", "onBlur"]}
                         noStyle
                         rules={[
                           {
                             required: true,
                             message: "Please input the captcha you got!",
+                          },
+                          {
+                            validateTrigger: "onBlur",
+                            validator: (_, value) => {
+                              return new Promise((resolve, reject) => {
+                                if (value) {
+                                  axios
+                                    .post(
+                                      "/v1/users/verifycaptcha",
+                                      qs.stringify({ code: value }),
+                                      {
+                                        headers: {
+                                          "Content-Type":
+                                            "application/x-www-form-urlencoded;charset=utf-8",
+                                        },
+                                      }
+                                    )
+                                    .then((response) => {
+                                      if (response.data.result == 200) {
+                                        resolve();
+                                      } else {
+                                        reject("your captcha is wrong");
+                                      }
+                                    });
+                                } else {
+                                  reject();
+                                }
+                              });
+                            },
                           },
                         ]}
                       >
@@ -150,16 +274,10 @@ class Register extends Component {
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Button>Get captcha</Button>
+                      <img src={this.state.captcha} />
+                      <a onClick={this.getCaptha}>change the captcha</a>
                     </Col>
                   </Row>
-                </Form.Item>
-
-                <Form.Item>
-                  <a href="../loginemail">login with email</a>
-                  <a className="right_float" href="">
-                    Forgot password
-                  </a>
                 </Form.Item>
 
                 <Form.Item>
@@ -168,9 +286,9 @@ class Register extends Component {
                     htmlType="submit"
                     className="login-form-button"
                   >
-                    Log in
+                    Register
                   </Button>
-                  Or <a href="">register now!</a>
+                  Or <a href="../loginemail">login in</a>
                 </Form.Item>
               </Form>
             </div>

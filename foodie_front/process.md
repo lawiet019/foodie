@@ -35,6 +35,23 @@ https://www.cnblogs.com/fundebug/p/6904753.html
 10. handle ajax
 https://www.cnblogs.com/qdjj/p/12408857.html
 
+11. get configuration files (not used)
+`npm run eject`
+- meet error `Remove untracked files, stash or commit any changes, and try again.`
+https://www.cnblogs.com/lfw421935678/p/13328444.html
+https://dev.to/rnagella/clean-up-untracked-files-in-git-repository-based-on-gitignore-56dl
+
+12. Adding Custom Environment Variables
+https://create-react-app.dev/docs/adding-custom-environment-variables/
+remember to provide the .env.production later
+
+13. solve the problem CORS
+http-proxy-middleware
+
+14. custom validator
+- return new Promise
+- onBlur use validateTrigger
+
 
 
 
