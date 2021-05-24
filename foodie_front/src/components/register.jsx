@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import LogoImage from "../assets/image/logo.png";
 import "antd/dist/antd.css";
 import "../assets/css/all.css";
+import RefreshImage from "../assets/image/refresh-icon.svg";
 
 import { Form, Input, Button, Row, Col, Avatar } from "antd";
 
@@ -17,15 +18,17 @@ import axios from "axios";
 import qs from "qs";
 
 class Register extends Component {
+  
   constructor(props) {
     super(props);
 
+    // this.refreshCaptha = this.refreshCaptha.bind(this)
     this.state = {
       captcha: "",
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getCaptha();
   }
 
@@ -37,16 +40,38 @@ class Register extends Component {
       }
     });
   };
-  // verifyCaptha = (code) => {
-  //   axios.get("/v1/users/verifyCaptcha").then((response) => {
+  refreshCaptha = () =>{
+  let refreshIcon = document.getElementById("refresh-icon")
+  let refreshButton = document.getElementById("refresh-button")
+  refreshButton.removeAttribute("class")
+  refreshButton.disabled = true
+  setTimeout(()=>{
 
-  //     if (response.data.result == 200) {
-  //       let img_base64 = "data:image/png;base64," + response.data.captcha;
-  //       this.setState({ captcha: img_base64 });
-  //     }
-  //   });
+    refreshIcon.addEventListener("animationiteration", () =>{
+    console.log("arrive there")
+    refreshButton.setAttribute("class", "refresh-end")
+    refreshButton.disabled = false
+    this.getCaptha()
+  })
+  },100)
 
-  // };
+
+  }
+  successSubmit = (values) => {
+    axios.post("/v1/users/register", qs.stringify({username: values.username,password:values.password,email:values.email }), {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+    }).then(response =>{
+      if (response.data.result ==200){
+        this.props.history.push({ pathname:'../register',state:{title : response.data.msg,subTitle:"we will redirect you to the log in page ",link:"../loginemail" } })
+
+      }
+
+    }
+
+    );
+  };
 
   render() {
     return (
@@ -84,6 +109,7 @@ class Register extends Component {
               <Form
                 name="normal_login"
                 className="login-form"
+                onFinish={this.successSubmit}
                 initialValues={{
                   remember: true,
                 }}
@@ -118,13 +144,12 @@ class Register extends Component {
                                   reject(response.data.msg);
                                 }
                               });
-                          }
-                          else{
-                            reject()
+                          } else {
+                            reject();
                           }
                         });
                       },
-                      validateTrigger: "onBlur"
+                      validateTrigger: "onBlur",
                     },
                   ]}
                 >
@@ -168,13 +193,12 @@ class Register extends Component {
                                   reject(response.data.msg);
                                 }
                               });
-                          }
-                          else{
-                            reject()
+                          } else {
+                            reject();
                           }
                         });
                       },
-                      validateTrigger: "onBlur"
+                      validateTrigger: "onBlur",
                     },
                   ]}
                 >
@@ -191,7 +215,6 @@ class Register extends Component {
                       required: true,
                       message: "Please input your Password!",
                     },
-                    
                   ]}
                 >
                   <Input
@@ -275,7 +298,7 @@ class Register extends Component {
                     </Col>
                     <Col span={12}>
                       <img src={this.state.captcha} />
-                      <a onClick={this.getCaptha}>change the captcha</a>
+                      <a onClick={this.refreshCaptha} id="refresh-button"  className="refresh-end"><img id="refresh-icon" height="12" src={RefreshImage} className="refresh-start"/> </a>
                     </Col>
                   </Row>
                 </Form.Item>

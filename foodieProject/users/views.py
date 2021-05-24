@@ -91,7 +91,7 @@ def loginByEmail(request):
             if check_password(password, user.password):
                 # use token as validation
                 if user.isActive:
-                    token =jwt.encode({'username': user.username,'email':user.email},settings.SECRET_KEY,algorithm='HS256')
+                    token =jwt.encode({'username': user.username,'email':user.email,"exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=31)},settings.SECRET_KEY,algorithm='HS256')
                     UserProfile.objects.filter(email = email).update(token = token)
                     return JsonResponse({'result': 200, 'msg':'you have logined in  successfully','token':token})
                 else:

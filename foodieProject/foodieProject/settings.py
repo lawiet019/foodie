@@ -22,12 +22,12 @@ config.read(CONF_DIR)
 DB_password = config["database"]["password"]
 
 # set the email
-EMAIL_HOST = "smtp.office365.com"
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = config["email"]["server_address"]
 EMAIL_HOST_PASSWORD = config["email"]["server_password"]
-EMAIL_USE_TLS= True
-EMAIL_FROM = config["email"]["server_address"]
 
 
 
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     # add token auth
     'rest_framework',
+    'social_django',
 
 ]
 
@@ -86,6 +87,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',  # <--
+                'social_django.context_processors.login_redirect', # <--
             ],
         },
     },

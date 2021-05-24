@@ -20,8 +20,8 @@ class UserProfile(models.Model):
     mobile = models.CharField('mobile',max_length=11,null=True,blank=True)
     token = models.CharField('token',max_length = 200,null=True,blank=True)
     isActive = models.BooleanField(default = False)
-    createTime = models.DateTimeField(null=True,blank=True)
-    updateDate = models.DateTimeField(null=True,blank=True)
+    createTime = models.DateTimeField(auto_now_add=True )
+    updateTime = models.DateTimeField(auto_now=True )
 
 class EmailVerifyRecord(models.Model):
     """
@@ -34,5 +34,7 @@ class EmailVerifyRecord(models.Model):
 
     code = models.CharField('code',max_length=20)
     email = models.EmailField('email',max_length=50)
+    createTime = models.DateTimeField(auto_now_add=True )
+    updateTime = models.DateTimeField(auto_now=True )
     sendType = models.CharField(choices=send_choices,max_length=10)
-    sendTime = models.DateTimeField()
+    sendTime = models.DateTimeField(auto_now_add=True)

@@ -173,7 +173,7 @@ front-end or back-end
 https://blog.csdn.net/weixin_44802104/article/details/103430291#:~:text=%E5%89%8D%E7%AB%AF%E9%AA%8C%E8%AF%81%E7%A0%81%E6%98%AF%E7%94%B1,%E7%AB%AF%E7%94%9F%E6%88%90%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%E3%80%82
 even I sepearate front end and back end ,I can still use request session(cannot be seen by postman but can be seen by wireshark)
 
-19.static files
+19. static files
 - change the settings.py
 ```
 STATIC_URL = '/static/'
@@ -184,6 +184,21 @@ STATICFILES_DIRS = (
 
 use in this format '/static/Fonts/Arvo-Regular.ttf'
 
+20. third -party login
+https://simpleisbetterthancomplex.com/tutorial/2016/10/24/how-to-add-social-login-to-django.html
+
+
+21. meet the problem
+the problem can be seen:
+```
+django.db.utils.OperationalError: could not connect to server: Connection refused
+	Is the server running on host "127.0.0.1" and accepting
+	TCP/IP connections on port 5432?
+```
+solution:
+reinstall the postgresql
+recreate the database 
+use `python manage.py makemigrations` `python manage.py migrate`
 
 
 

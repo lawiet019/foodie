@@ -126,7 +126,8 @@ def send_register_email(email, send_type):
     # 实例化一个EmailVerifyRecord对象
 
 
-    email_record = EmailVerifyRecord.objects.update_or_create(email = email,send_type = send_type)
+    EmailVerifyRecord.objects.update_or_create(email = email,sendType = send_type)
+    email_record = EmailVerifyRecord.objects.get(email = email,sendType = send_type)
     # 生成随机的code放入链接
     code = "".join(get_chars(init_chars,16))
     email_record.code = code

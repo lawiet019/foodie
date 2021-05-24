@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import LogoImage from "../assets/image/logo.png";
 import "antd/dist/antd.css";
 import "../assets/css/all.css";
+import "../assets/css/register.css";
 
 import { Form, Input, Button, Row, Col, Avatar,Checkbox } from "antd";
 
