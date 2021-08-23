@@ -1,12 +1,14 @@
 import random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from string import ascii_letters,digits
-import os
+from .models import UserProfile
 from django.core.mail import send_mail
 from django.conf import settings
 import configparser
 from datetime import datetime
 from .models import EmailVerifyRecord
+import jwt
+from datetime import datetime,timedelta
 _letter_cases = "abcdefghjkmnpqrstuvwxy"  # 小写字母，去除可能干扰的i，l，o，z
 _upper_cases = _letter_cases.upper()  # uppercase alpha
 _numbers = ''.join(map(str, range(3, 10)))  # number
@@ -126,13 +128,19 @@ def send_register_email(email, send_type):
     # 实例化一个EmailVerifyRecord对象
 
 
-    EmailVerifyRecord.objects.update_or_create(email = email,sendType = send_type)
-    email_record = EmailVerifyRecord.objects.get(email = email,sendType = send_type)
+    if not EmailVerifyRecord.objects.filter(email = email,sendType = send_type).exists():
+
+        email_record = EmailVerifyRecord.objects.create(email = email,sendType = send_type)
     # 生成随机的code放入链接
-    code = "".join(get_chars(init_chars,16))
-    email_record.code = code
-    email_record.sendTime  = datetime.now()
-    email_record.save()
+
+   
+    while True:
+        code = "".join(get_chars(init_chars,16))
+        
+        if not EmailVerifyRecord.objects.filter(code=code).exists():
+            break
+    EmailVerifyRecord.objects.filter(email = email,sendType = send_type).update(code = code,sendTime = datetime.now())
+   
 
 
     EMAIL_FROM = settings.EMAIL_HOST_USER
@@ -143,7 +151,8 @@ def send_register_email(email, send_type):
 
     if send_type == "register":
         email_title = "foodie - activate your account"
-        email_body = "Please click the link below to activate your account: http://127.0.0.1:8000/v1/users/activation/{0}".format(code)
+        print(code)
+        email_body = "Please click the link below to activate your account: http://127.0.0.1:3000/users/activation/{0}".format(code)
 
         # 使用Django内置函数完成邮件发送。四个参数：主题，邮件内容，发件人邮箱地址，收件人（是一个字符串列表）
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
@@ -158,5 +167,42 @@ def send_register_email(email, send_type):
         email_body = "Please click the link below to retrieve your password: http://127.0.0.1:4000/reset/{0}".format(code)
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
         # 如果发送成功
-        if send_status:
+        if send_status: 
             return True
+
+# 0 verified
+# 1 expired
+# 2 invalid
+# 3, version id changed, become invalid
+def authentication(token):
+   
+    try:
+        v = jwt.decode(token,settings.SECRET_KEY,algorithms=["HS256"])
+       
+  
+    except jwt.ExpiredSignatureError:
+        return 1,None,None
+    except:
+        return 2,None,None 
+     # we need to verify the version is latest
+    email = v["data"]["email"]
+    if UserProfile.objects.filter(email = email).exists():
+        user = UserProfile.objects.filter(email = email)
+        if user.versionID == v.data.versionID:
+            return 0,user,v
+        
+    return 3,None,None
+
+# generate the token
+#type -1 access token
+#type -2 refresh token
+def generate_token(user, type):
+    if type ==1:
+        token =jwt.encode({'exp': datetime.now() + timedelta(hours=2),'data':{'email':user.email,'version':user.versionID,"type":1}},settings.SECRET_KEY,algorithm='HS256')
+    else:
+        token =jwt.encode({'exp': datetime.now() + timedelta(days=30),'data':{'email':user.email,'version':user.versionID,"type":2}},settings.SECRET_KEY,algorithm='HS256')
+
+    return token
+
+
+    

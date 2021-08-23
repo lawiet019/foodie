@@ -29,7 +29,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = config["email"]["server_address"]
 EMAIL_HOST_PASSWORD = config["email"]["server_password"]
 
-
+#set the refresh path
+REFRESH_PATH = 'v1/users/refresh'
 
 
 # Quick-start development settings - unsuitable for production

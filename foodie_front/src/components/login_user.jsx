@@ -8,7 +8,8 @@ import "../assets/css/all.css";
 import { Form, Input, Button, Row, Col, Avatar,Checkbox } from "antd";
 
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-
+import { withTranslation } from 'react-i18next';
+@withTranslation()
 class LoginUser extends Component {
   render() {
     return (
@@ -41,7 +42,7 @@ class LoginUser extends Component {
                   }}
                   src={LogoImage}
                 />
-                <h2>Login with username </h2>
+                <h2>{this.props.t('loginuser')} </h2>
               </div>
               <Form
                 name="normal_login"
@@ -56,13 +57,13 @@ class LoginUser extends Component {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Username!",
+                      message: this.props.t('warningusername'),
                     },
                   ]}
                 >
                   <Input
                     prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Username"
+                    placeholder={this.props.t('username')}
                   />
                 </Form.Item>
                 <Form.Item
@@ -70,23 +71,23 @@ class LoginUser extends Component {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Password!",
+                      message: this.props.t('warningpassword'),
                     },
                   ]}
                 >
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
-                    placeholder="Password"
+                    placeholder={this.props.t('password')}
                   />
                 </Form.Item>
                 <Form.Item>
                   
                   <a  href='../loginemail'>
-                    login with email
+                  {this.props.t('loginemail')}
                   </a>
                   <a className="right_float" href="">
-                    Forgot password
+                    {this.props.t('forgetpassword')}
                   </a>
                 </Form.Item>
 
@@ -96,9 +97,9 @@ class LoginUser extends Component {
                     htmlType="submit"
                     className="login-form-button"
                   >
-                    Log in
+                    {this.props.t('login')}
                   </Button>
-                  Or <a href="">register now!</a>
+                  {this.props.t('or')} <a href="">{this.props.t('register')}</a>
                 </Form.Item>
               </Form>
             </div>

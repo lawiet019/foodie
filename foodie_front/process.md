@@ -52,6 +52,54 @@ http-proxy-middleware
 - return new Promise
 - onBlur use validateTrigger
 
+15. why use `className` instead of `class`
+https://stackoverflow.com/questions/46989454/class-vs-classname-in-react-16
+
+16. meet error ` Support for the experimental syntax ‘decorators-legacy‘ isn‘t currently enabled`
+solution：https://blog.csdn.net/weixin_44369568/article/details/104475327
+
+17.  support globalization
+react-i18next
+
+* still need to add zh.json
+18. review javascript -ES6 and ES7
 
 
+19. set a time for jump 
+https://www.cnblogs.com/a-cat/p/9607980.html
+setInterval() 
+w3school.com.cn/jsref/met_win_setinterval.asp
+setState()
+https://www.cnblogs.com/katydids/p/10014111.html
+
+
+
+20. three ways to deliver data between pages
+https://blog.csdn.net/qq_23158083/article/details/68488831
+
+
+21. Props in React 
+https://itnext.io/what-is-props-and-how-to-use-it-in-react-da307f500da0#:~:text=%E2%80%9CProps%E2%80%9D%20is%20a%20special%20keyword,way%20from%20parent%20to%20child)
+
+22. life cycle of React 
+https://juejin.cn/post/6844903510538977287
+
+
+23. parameters in router
+https://segmentfault.com/a/1190000023554534
+
+
+
+24. Conditional Rendering
+https://reactjs.org/docs/conditional-rendering.html
+
+
+25. the function added in header
+left:logo  name
+right: search user /switch dark mode/ switch language 
+
+future to do:
+dark mode
+https://www.smashingmagazine.com/2020/04/dark-mode-react-apps-styled-components/
+styled-components
 

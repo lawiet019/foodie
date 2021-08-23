@@ -9,6 +9,13 @@ urlpatterns = [
     path('activation/<slug:slug>', views.active, name='activation'),
     path('checkemail', views.checkEmail, name='checkemail'),
     path('checkusername', views.checkUsername, name='checkusername'),
+    path('resendactive',views.resendactive,name='resendactive'),
+    path('forgetpassword',views.forgetpassword,name='forgetpassword'),
+    path('resetpasswordforforget',views.resetpasswordforforget,name='resetpasswordforforget'),
+    path('testauth',views.testAuth,name='testauth'),
+    path('refresh',views.refresh,name='refresh'),
+   
+    
 
 ]
 #getCaptcha

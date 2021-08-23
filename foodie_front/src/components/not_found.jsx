@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Result, Button } from 'antd';
 import "../assets/css/not_found.css";
+import { withTranslation } from 'react-i18next';
+@withTranslation()
 class NotFound extends Component {
    
     backHome = () =>{
@@ -13,8 +15,8 @@ class NotFound extends Component {
             status="404"
             title="404"
             className="container"
-            subTitle="Sorry, the page you visited does not exist."
-            extra={<Button type="primary" onClick={this.backHome}>Back Home</Button>}
+            subTitle={this.props.t('404')}
+            extra={<Button type="primary" onClick={this.backHome}>{this.props.t('backhome')}</Button>}
         />
           
           );

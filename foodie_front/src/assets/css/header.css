@@ -1,6 +1,24 @@
 .header{
     position: fixed;
-    height: 80px;
+    height: 70px;
     background:#c30201;
     width: 100%;
+}
+.logo{
+    height: 50px;
+    margin-top: 10px;
+    margin-left: 10%;
+}
+.text{
+    color: #ffffff;
+    font-size:  20px;
+    margin-top: 15px;
+
+}
+.search{
+    margin-top: 15px;
+    padding-right: 10px;
+}
+.language{
+    margin-top: 20px;
 }

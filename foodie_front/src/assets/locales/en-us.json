@@ -1,0 +1,52 @@
+{
+    "register":"Register",
+    "warningusername":"Please input your username!",
+    "username":"Username",
+    "warningemail1":"The input is not valid E-mail!",
+    "warningemail2":"Please input your E-mail!",
+    "email":"Email",
+    "warningpassword":"Please input your Password!",
+    "password":"Password",
+    "confirmpassword":"Confirm password",
+    "captchaextra":"We must make sure that your are a human.",
+    "captchawarning":"Please input the captcha you got!",
+    "login":"Log In",
+    "or":"Or",
+    "404":"Sorry, the page you visited does not exist.",
+    "backhome":"Back Home",
+    "loginemail":"Login with email",
+    "loginuser":"Login with username",
+    "forgetpassword":"Forgot password",
+    "successregtitle":"Congratulations ! You have registered successfully!",
+    "successregsubtitle":"You need to activate your account according to the email we sent to you ",
+    "successlogintitle":"Congratulations ! You have logged in successfully",
+    "successloginsubtitle":"we will redirect you to the index page, if not, you could click the button below",
+    "resendactive":"resend the activation link",
+    "resendactivesuc":"we already resend activation link",
+    "activesuc":"Congratulations! You have already activated your account, we will redirect you to the login page.If the page hasn't jumped after 10 seconds,",
+    "clickthis":"click this.",
+    "activebef":" You have already activated the account before. we will redirect you to the login page.If the page hasn't jumped after 10 seconds,",
+    "activefail": "The link is invalid or expired.",
+    "registerused":"the username or email has been used,please choose another one",
+    "requesterr":"Sorry, there is something problem with your request",
+    "loginsuc":"You have logined in  successfully",
+    "loginemailinactive":"Your account has not been activated yet, please activate it according to the email we just sent to you.",
+    "loginemailinvalid":"Invalid email or password",
+    "agreementnotselect":"You should agree to the terms and conditions before registering",
+    "resendacttitle":"Please input your email, we will resend the activation link",
+    "redirectindex":"Redirect to Index",
+    "searchtext":"search for something...",
+    "search":"Search",
+    "chinese":"Chinese",
+    "english":"English",
+    "foodie_cap":"Foodie"
+
+    
+
+
+
+
+
+
+
+}

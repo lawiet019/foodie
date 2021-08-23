@@ -23,6 +23,8 @@ ingredientcomments（
 market(name,ingredients they have,urltobuy,delivery or not,id*)
 user (username, password, theirRecipe,location,id*)
 
+post -> nosql
+
 -  choose to use postgresql
   - my postgres will background start so I just connect to it by
   ```
@@ -201,6 +203,76 @@ recreate the database
 use `python manage.py makemigrations` `python manage.py migrate`
 
 
+22. deal the the expired data
+https://blog.csdn.net/zhwwashere/article/details/20401153
+
+
+
+23. create a new app named  recipes
+
+```
+django-admin startapp recipes
+```
+
+24. where to store blog with image
+- what tool front end will use and what data it will send to
+https://jpuri.github.io/react-draft-wysiwyg/#/docs
+https://www.sanity.io/guides/top-5-rich-text-react-components
+can have html/markdown 
+- where to store images
+store them in file system
+- which image file host to use 
+free image siteing fire storage
+https://firebase.google.com/docs/storage/web/start
+- design the recipe schema
+()
+
+25. api document
+use postman to publish document
+26. token
+user is nearly complete
+I use token to remember the login status. And everytime log in, it will return to client. And client will keep it and expired time in the localStorage.
+27. other things connected to token
+- remember me 
+- token automatic renewal 
+
+to realize the function, we use two tokens:
+access token and refresh token
+  - why we need to two tokens
+  https://www.zhihu.com/question/316165120?sort=created
+  because the access token used a lot in the  tranmission process. so it will be vulnerable
+
+
+
+
+- security concern 
+  - httponly 
+  By putting the token in the cookie and setting that cookie HttpOnly, you can prevent access to the cookie by malicious client side script (ie, XSS)
+  in that case, we should store the token in the cookie not the body
+  here is how to implement in django 
+  https://stackoverflow.com/questions/64389973/set-cookies-for-ajax-request-when-jsonresponse-is-returned 
+
+- I don't want to store session in the server
+JWT 
+https://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html
+  - will jwt be the same 
+  in my example, if the exp is same, it will be same. but every time it will change.
+
+
+
+28. In the client part, should we store the data in cookie or localStorage
+cookie is safer
+but I need to figure out how to combine it with two tokens:
+
+- expire time?
+we could set the automatic expired time
+- could we choose what cookie to send
+You can store both tokens, access and refresh, as cookie. But refresh token must have special path (e.g. /refresh). So refresh token will be sent only for request to /refresh url, not for every request like access token.The path parameter can be used in the set_ccokie
+for the path in cookie, we cannot use the postfix path 
+https://stackoverflow.com/questions/8014024/set-cookie-wildcard-path
+so we store the path in setting
+
+
 
 
 
@@ -210,3 +282,21 @@ use `python manage.py makemigrations` `python manage.py migrate`
 DJANGO ORM
 https://blog.csdn.net/kan2016/article/details/82855158
 https://blog.csdn.net/kan2016/article/details/82868636?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param
+
+
+future function:
+1. 如果邮箱已经激活，不能再发激活邮件 done
+2.  自动清理无用数据，比如没有激活的用户
+3. logout - 直接在前端删除token
+4. httponly (之前没用是为了debug)
+5.   下面这些功能不能允许通过 cookie 登录的用户使用：
+  * 修改密码
+  * 修改用户邮箱（特别是如果系统的密码找回机制是基于邮箱的）
+  * 任何用户的敏感信息
+  * 任何需要支付的功能
+ 
+
+
+
+
+

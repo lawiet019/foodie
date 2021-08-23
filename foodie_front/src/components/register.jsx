@@ -6,7 +6,9 @@ import "antd/dist/antd.css";
 import "../assets/css/all.css";
 import RefreshImage from "../assets/image/refresh-icon.svg";
 
-import { Form, Input, Button, Row, Col, Avatar } from "antd";
+import { Form, Input, Button, Row, Col, Avatar, message, Checkbox,Modal } from "antd";
+import { withTranslation } from 'react-i18next';
+
 
 import {
   UserOutlined,
@@ -17,23 +19,47 @@ import {
 import axios from "axios";
 import qs from "qs";
 
+@withTranslation()
 class Register extends Component {
+  
   
   constructor(props) {
     super(props);
+    
 
     // this.refreshCaptha = this.refreshCaptha.bind(this)
     this.state = {
       captcha: "",
+      
+      isModalVisible:false , 
+      setIsModalVisible:false 
     };
+    
+  
+    
   }
+  showModal = () => {
+    console.log("arrive there")
+    this.setState({isModalVisible:true})
+ 
+  };
 
+  handleOk = () => {
+    this.setState({isModalVisible:false})
+    
+  };
+
+  handleCancel = () => {
+    this.setState({isModalVisible:false})
+    
+  };
+  
   componentDidMount() {
     this.getCaptha();
   }
 
   getCaptha = () => {
-    axios.get("/v1/users/getcaptcha").then((response) => {
+    axios.get("../v1/users/getcaptcha").then((response) => {
       if (response.data.result == 200) {
         let img_base64 = "data:image/png;base64," + response.data.captcha;
         this.setState({ captcha: img_base64 });
@@ -48,7 +74,6 @@ class Register extends Component {
   setTimeout(()=>{
 
     refreshIcon.addEventListener("animationiteration", () =>{
-    console.log("arrive there")
     refreshButton.setAttribute("class", "refresh-end")
     refreshButton.disabled = false
     this.getCaptha()
@@ -57,27 +82,47 @@ class Register extends Component {
 
 
   }
-  successSubmit = (values) => {
-    axios.post("/v1/users/register", qs.stringify({username: values.username,password:values.password,email:values.email }), {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-      },
-    }).then(response =>{
-      if (response.data.result ==200){
-        this.props.history.push({ pathname:'../register',state:{title : response.data.msg,subTitle:"we will redirect you to the log in page ",link:"../loginemail" } })
-
-      }
-
-    }
-
-    );
-  };
+  
 
   render() {
+    const { t, i18n } = this.props
+    const onFinish =  (values) => {
+      console.log("arrive there")
+      axios.post("../v1/users/register", qs.stringify({username: values.username,password:values.password,email:values.email }), {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      }).then(response =>{
+        if (response.data.result ==200){
+        
+          this.props.history.push({ pathname:'./userresult',state:{"stage":"register200"}})
+  
+        }
+        else if(response.data.result==409){
+          message.info(t('registerused'))
+         }
+        else{
+          message.info(t('requesterr'))
+        }
+  
+  
+      }
+  
+      );
+
+    }
+    const onFinishFailed = (errorInfo) =>{
+     
+      console.log("Fails",errorInfo)
+    }
+
+
+    
+  
     return (
       <div className="container">
         <Row>
-          <Col
+          <Col 
             xs={{ span: 1 }}
             sm={{ span: 3 }}
             md={{ span: 6 }}
@@ -104,15 +149,16 @@ class Register extends Component {
                   }}
                   src={LogoImage}
                 />
-                <h2>Register </h2>
+                <h2>{t('register')} </h2>
               </div>
               <Form
                 name="normal_login"
                 className="login-form"
-                onFinish={this.successSubmit}
-                initialValues={{
-                  remember: true,
-                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                // initialValues={{
+                //   remember: true,
+                // }}
               >
                 <Form.Item
                   validateTrigger={["onChange", "onBlur"]}
@@ -120,7 +166,7 @@ class Register extends Component {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Username! ",
+                      message: this.props.t('warningusername'),
                     },
                     {
                       validator: (_, value) => {
@@ -128,7 +174,7 @@ class Register extends Component {
                           if (value) {
                             axios
                               .post(
-                                "v1/users/checkusername",
+                                "../v1/users/checkusername",
                                 qs.stringify({ username: value }),
                                 {
                                   headers: {
@@ -155,7 +201,7 @@ class Register extends Component {
                 >
                   <Input
                     prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Username"
+                    placeholder={t('username')}
                   />
                 </Form.Item>
 
@@ -165,11 +211,11 @@ class Register extends Component {
                   rules={[
                     {
                       type: "email",
-                      message: "The input is not valid E-mail!",
+                      message: t('warningemail1'),
                     },
                     {
                       required: true,
-                      message: "Please input your E-mail!",
+                      message: t('warningemail2'),
                     },
                     {
                       validator: (_, value) => {
@@ -177,7 +223,7 @@ class Register extends Component {
                           if (value) {
                             axios
                               .post(
-                                "v1/users/checkemail",
+                                "../v1/users/checkemail",
                                 qs.stringify({ email: value }),
                                 {
                                   headers: {
@@ -204,7 +250,7 @@ class Register extends Component {
                 >
                   <Input
                     prefix={<MailFilled className="site-form-item-icon" />}
-                    placeholder="Email"
+                    placeholder={t('email')}
                   />
                 </Form.Item>
 
@@ -213,14 +259,14 @@ class Register extends Component {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Password!",
+                      message: this.props.t('warningpassword'),
                     },
                   ]}
                 >
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
-                    placeholder="Password"
+                    placeholder={this.props.t('password')}
                   />
                 </Form.Item>
                 <Form.Item
@@ -229,7 +275,7 @@ class Register extends Component {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Password!",
+                      message: this.props.t('warningpassword'),
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
@@ -247,10 +293,10 @@ class Register extends Component {
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
-                    placeholder="comfirm password"
+                    placeholder= {this.props.t('confirmpassword')}
                   />
                 </Form.Item>
-                <Form.Item extra="We must make sure that your are a human.">
+                <Form.Item extra= {t('captchaextra')}>
                   <Row>
                     <Col span={12}>
                       <Form.Item
@@ -260,7 +306,7 @@ class Register extends Component {
                         rules={[
                           {
                             required: true,
-                            message: "Please input the captcha you got!",
+                            message: this.props.t('captchawarning'),
                           },
                           {
                             validateTrigger: "onBlur",
@@ -269,7 +315,7 @@ class Register extends Component {
                                 if (value) {
                                   axios
                                     .post(
-                                      "/v1/users/verifycaptcha",
+                                      "../v1/users/verifycaptcha",
                                       qs.stringify({ code: value }),
                                       {
                                         headers: {
@@ -302,16 +348,29 @@ class Register extends Component {
                     </Col>
                   </Row>
                 </Form.Item>
-
+                <Form.Item 
+                 name="agreement"
+                 valuePropName="checked"
+                 rules={[
+                   {
+                     validator: (_, value) =>
+                       value
+                         ? Promise.resolve()
+                         : Promise.reject(t('agreementnotselect'))
+                   }
+                 ]} >
+                <Checkbox >I agree to the <a onClick={this.showModal}>terms and conditions</a> </Checkbox>
+                </Form.Item>
                 <Form.Item>
                   <Button
                     type="primary"
                     htmlType="submit"
                     className="login-form-button"
+                   
                   >
-                    Register
+                    {t('register')}
                   </Button>
-                  Or <a href="../loginemail">login in</a>
+                  {t('or')} <a href="../loginemail">{t('login')}</a>
                 </Form.Item>
               </Form>
             </div>
@@ -326,6 +385,11 @@ class Register extends Component {
             1 col-order-responsive
           </Col>
         </Row>
+        <Modal title="Terms and conditions" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
+        <h1>Terms and conditions of software</h1>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
       </div>
     );
   }
